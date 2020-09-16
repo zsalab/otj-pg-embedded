@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public class SingleInstanceCockroachExtension implements AfterTestExecutionCallback, BeforeTestExecutionCallback {
 
-    private volatile EmbeddedCockroach epg;
+    private volatile EmbeddedCockroach ecrdb;
     private volatile Connection postgresDatabaseConnection;
     private final List<Consumer<EmbeddedCockroach.Builder>> builderCustomizers = new CopyOnWriteArrayList<>();
 
@@ -36,31 +36,31 @@ public class SingleInstanceCockroachExtension implements AfterTestExecutionCallb
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
-        epg = pg();
-        postgresDatabaseConnection = epg.getPostgresDatabase().getConnection();
+        ecrdb = crdb();
+        postgresDatabaseConnection = ecrdb.getPostgresDatabase().getConnection();
     }
 
-    private EmbeddedCockroach pg() throws IOException {
+    private EmbeddedCockroach crdb() throws IOException {
         final EmbeddedCockroach.Builder builder = EmbeddedCockroach.builder();
         builderCustomizers.forEach(c -> c.accept(builder));
         return builder.start();
     }
 
     public SingleInstanceCockroachExtension customize(Consumer<EmbeddedCockroach.Builder> customizer) {
-        if (epg != null) {
+        if (ecrdb != null) {
             throw new AssertionError("already started");
         }
         builderCustomizers.add(customizer);
         return this;
     }
 
-    public EmbeddedCockroach getEmbeddedPostgres()
+    public EmbeddedCockroach getEmbeddedCockroach()
     {
-        EmbeddedCockroach epg = this.epg;
-        if (epg == null) {
+        EmbeddedCockroach ecrdb = this.ecrdb;
+        if (ecrdb == null) {
             throw new AssertionError("JUnit test not started yet!");
         }
-        return epg;
+        return ecrdb;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SingleInstanceCockroachExtension implements AfterTestExecutionCallb
             throw new AssertionError(e);
         }
         try {
-            epg.close();
+            ecrdb.close();
         } catch (IOException e) {
             throw new AssertionError(e);
         }

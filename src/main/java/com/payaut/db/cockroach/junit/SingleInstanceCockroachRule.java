@@ -56,11 +56,11 @@ public class SingleInstanceCockroachRule extends ExternalResource
 
     public EmbeddedCockroach getEmbeddedCockroach()
     {
-        EmbeddedCockroach epg = this.ecrdb;
-        if (epg == null) {
+        EmbeddedCockroach ecrdb = this.ecrdb;
+        if (ecrdb == null) {
             throw new AssertionError("JUnit test not started yet!");
         }
-        return epg;
+        return ecrdb;
     }
 
     @Override

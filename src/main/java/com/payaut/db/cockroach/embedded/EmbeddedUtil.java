@@ -60,7 +60,7 @@ final class EmbeddedUtil {
 
     /**
      * Get current operating system string. The string is used in the appropriate
-     * postgres binary name.
+     * cockroach binary name.
      *
      * @return Current operating system string.
      */
@@ -79,7 +79,7 @@ final class EmbeddedUtil {
 
     /**
      * Get the machine architecture string. The string is used in the appropriate
-     * postgres binary name.
+     * cockroach binary name.
      *
      * @return Current machine architecture string.
      */
@@ -91,7 +91,7 @@ final class EmbeddedUtil {
      * Unpack archive compressed by tar with xz compression. By default system tar is used (faster). If not found, then the
      * java implementation takes place.
      *
-     * @param stream    A stream with the postgres binaries.
+     * @param stream    A stream with the cockroach binaries.
      * @param targetDir The directory to extract the content to.
      */
     static void extractTxz(InputStream stream, String targetDir) throws IOException {
